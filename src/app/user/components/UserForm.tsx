@@ -30,7 +30,7 @@ const createUserValidationSchema = z.object({
 type CreateUserValidationSchema = z.infer<typeof createUserValidationSchema>;
 
 interface UserFormProps {
-  defaultValues?: User;
+  defaultValues?: CreateUserValidationSchema;
   onSubmit: (data: CreateUserValidationSchema) => void;
 }
 
@@ -47,7 +47,7 @@ export function UserForm({ defaultValues, onSubmit }: UserFormProps) {
 
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex gap-4">
+      <div className="flex max-md:flex-col-reverse max-md:items-center gap-4">
         <div className="flex flex-col gap-2">
           <Label errorMessage={errors.name?.message}>
             Name
@@ -118,10 +118,10 @@ export function UserForm({ defaultValues, onSubmit }: UserFormProps) {
             </select>
           </Label>
         </div>
-        <Avatar size="lg" image={watch("image")} />
+        <Avatar size="xl" image={watch("image")} />
       </div>
       <div className="flex justify-center gap-10 mt-10">
-        <NextLink href="list">
+        <NextLink href="/user/list">
           <button className="btn btn-error">Cancel</button>
         </NextLink>
         <button type="submit" className="btn btn-primary">
