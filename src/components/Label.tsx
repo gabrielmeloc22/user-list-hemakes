@@ -10,7 +10,7 @@ export const Label = forwardRef<HTMLLabelElement, LabelProps>(function Label(
 ) {
   return (
     <div className="flex flex-col gap-2">
-      <label ref={ref} className="label flex gap-4" {...props}>
+      <label ref={ref} className="label flex max-sm:flex-col items-start gap-4" {...props}>
         {children}
       </label>
       {errorMessage && <p className="text-red-400 text-sm block self-end">{errorMessage}</p>}

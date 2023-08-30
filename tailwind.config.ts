@@ -28,6 +28,8 @@ const config: Config = {
           "success-content": "#16a34a",
           error: "#fecaca",
           "error-content": "#be123c",
+          info: "#bfdbfe",
+          "info-content": "#1d4ed8",
         },
       },
     ],

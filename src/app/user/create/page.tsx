@@ -10,8 +10,8 @@ export default function UserCreatePage() {
 
   return (
     <div className="flex flex-col items-center gap-20 p-6">
-      <header>
-        <h1 className="font-bold text-3xl">Create user</h1>
+      <header className="w-full">
+        <h1 className="text-start font-bold text-3xl pt-10">Create user</h1>
       </header>
       <main>
         <UserForm
