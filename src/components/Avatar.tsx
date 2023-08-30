@@ -13,18 +13,19 @@ const sizes = {
   sm: "w-8",
 };
 
-export function Avatar({ image, size = "lg", circle = false }: AvatarProps) {
+export function Avatar({ image, size = "md", circle = false }: AvatarProps) {
   const sizeClass = sizes[size];
+  const borderClass = circle ? "rounded-full" : "";
 
   return image ? (
     <div className="avatar h-fit w-fit">
-      <div className={`items-center rounded bg-slate-200 ${sizeClass} ${circle ? "rounded-full" : ""}`}>
+      <div className={`items-center rounded bg-slate-200 ${sizeClass} ${borderClass}`}>
         <img src={image} />
       </div>
     </div>
   ) : (
     <div
-      className={`h-fit w-fit aspect-square flex items-center justify-center bg-slate-300 rounded p-4 ${sizeClass}`}
+      className={`h-fit aspect-square flex items-center justify-center bg-slate-300 rounded p-4 ${sizeClass} ${borderClass}`}
     >
       <User size="80%" />
     </div>
