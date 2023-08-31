@@ -3,6 +3,7 @@ import { Avatar } from "@/components/Avatar";
 import { User } from "@/types/user";
 import { DotsThreeVertical, PencilSimple, TrashSimple } from "@phosphor-icons/react";
 import NextLink from "next/link";
+import { Dispatch, SetStateAction } from "react";
 
 enum UserRoles {
   developer = "Developer",
@@ -13,9 +14,11 @@ enum UserRoles {
 
 interface UserTableProps {
   userData?: User[];
+  onSelect: Dispatch<SetStateAction<string[]>>;
+  selected: string[];
 }
 
-export function UserTable({ userData }: UserTableProps) {
+export function UserTable({ userData, onSelect, selected }: UserTableProps) {
   const { deleteOne } = useUsers();
 
   return (
@@ -24,7 +27,16 @@ export function UserTable({ userData }: UserTableProps) {
         <thead>
           <tr>
             <th>
-              <input type="checkbox" className="checkbox border-2" disabled={userData?.length === 0}></input>
+              <input
+                type="checkbox"
+                className="checkbox border-2"
+                disabled={userData?.length === 0}
+                onChange={(e) =>
+                  e.target.checked
+                    ? userData && e.target.checked && onSelect(userData.map(({ id }) => id))
+                    : onSelect([])
+                }
+              />
             </th>
             <th>Name</th>
             <th>Company</th>
@@ -38,7 +50,16 @@ export function UserTable({ userData }: UserTableProps) {
           {userData?.map(({ id, company, name, role, image, status, verified }) => (
             <tr key={id}>
               <td>
-                <input type="checkbox" className="checkbox border-2" />
+                <input
+                  type="checkbox"
+                  className="checkbox border-2"
+                  checked={selected.includes(id)}
+                  onChange={(e) =>
+                    e.target.checked
+                      ? onSelect((prev) => [...prev, id])
+                      : onSelect((prev) => prev.filter((userId) => userId !== id))
+                  }
+                />
               </td>
               <td>
                 <div className="flex gap-2 items-center font-semibold">

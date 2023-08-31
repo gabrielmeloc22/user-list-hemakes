@@ -1,7 +1,7 @@
 "use client";
 
 import { useUsers } from "@/app/context/UserContext";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, Trash } from "@phosphor-icons/react";
 import { fuzzyFilter } from "fuzzbunny";
 import NextLink from "next/link";
 import { useState } from "react";
@@ -9,8 +9,9 @@ import { UserSearchInput } from "../components/UserSearchInput";
 import { UserTable } from "../components/UserTable";
 
 export default function UserListPage() {
-  const { users } = useUsers();
+  const { users, deleteMany } = useUsers();
   const [searchValue, setSearchValue] = useState("");
+  const [userSelection, setUserSelection] = useState<string[]>([]);
 
   const userTableData = !searchValue
     ? users
@@ -21,8 +22,6 @@ export default function UserListPage() {
           fields: ["company", "name", "role", "status", "verified"],
         }
       ).map(({ item }) => ({ ...item, verified: item.verified === "yes" ? true : false }));
-
-  console.log(userTableData, users);
 
   return (
     <div className="flex flex-col w-full max-w-screen-2xl">
@@ -35,9 +34,23 @@ export default function UserListPage() {
           </button>
         </NextLink>
       </header>
-      <main>
-        <UserSearchInput onSearch={setSearchValue} />
-        <UserTable userData={userTableData} />
+      <main className="flex flex-col gap-8">
+        <div className="flex justify-between p-4">
+          <UserSearchInput onSearch={setSearchValue} />
+          {userSelection.length !== 0 && (
+            <button
+              className="btn btn-error flex gap-4 items-center"
+              onClick={() => {
+                deleteMany(userSelection);
+                setUserSelection([]);
+              }}
+            >
+              <Trash />
+              Delete selected
+            </button>
+          )}
+        </div>
+        <UserTable userData={userTableData} onSelect={setUserSelection} selected={userSelection} />
       </main>
     </div>
   );

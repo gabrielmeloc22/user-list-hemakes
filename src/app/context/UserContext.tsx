@@ -9,6 +9,7 @@ interface UserContextData {
   save: (user: Omit<User, "id">) => void;
   updateUser: (id: string, user: Omit<User, "id">) => void;
   getById: (id: string) => User | null | undefined;
+  deleteMany: (ids: string[]) => void;
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData);
@@ -34,8 +35,10 @@ export function UserProvider({ children }: UserContextProps) {
   };
   const deleteOne = (id: string) => {
     if (users) {
-      const filtered = Object.entries(users).filter(([userId]) => userId !== id);
-      setUsers(Object.fromEntries(filtered));
+      setUsers((prev) => {
+        const filtered = Object.entries(prev || []).filter(([userId]) => userId !== id);
+        return Object.fromEntries(filtered);
+      });
     }
   };
   const getById = (id: string): User | null | undefined => {
@@ -45,9 +48,15 @@ export function UserProvider({ children }: UserContextProps) {
   const updateUser = (id: string, user: Omit<User, "id">) => {
     setUsers((prev) => ({ ...prev, [id]: { id, ...user } }));
   };
+  const deleteMany = (ids: string[]) => {
+    setUsers((prev) => {
+      const filtered = Object.entries(prev || []).filter(([userId]) => !ids.includes(userId));
+      return Object.fromEntries(filtered);
+    });
+  };
 
   return (
-    <UserContext.Provider value={{ users: usersArray, save, deleteOne, updateUser, getById }}>
+    <UserContext.Provider value={{ users: usersArray, save, deleteOne, updateUser, getById, deleteMany }}>
       {children}
     </UserContext.Provider>
   );
