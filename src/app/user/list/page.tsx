@@ -1,34 +1,27 @@
 "use client";
 
-import { Avatar } from "@/components/Avatar";
-import { useUsers } from "@/hooks/useUsers";
-import { DotsThreeVertical, PencilSimple, Plus, TrashSimple } from "@phosphor-icons/react";
-import NextLink from "next/link";
-import { useEffect, useState } from "react";
-import { UserSearch } from "../components/UserSearch";
-import { User } from "@/types/user";
+import { useUsers } from "@/app/context/UserContext";
+import { Plus, Trash } from "@phosphor-icons/react";
 import { fuzzyFilter } from "fuzzbunny";
-
-enum UserRoles {
-  developer = "Developer",
-  uidesigner = "Ui Designer",
-  hrmanager = "HR Manager",
-  leader = "Leader",
-}
+import NextLink from "next/link";
+import { useState } from "react";
+import { UserSearchInput } from "../components/UserSearchInput";
+import { UserTable } from "../components/UserTable";
 
 export default function UserListPage() {
-  const { users, removeOne } = useUsers();
+  const { users, deleteMany } = useUsers();
   const [searchValue, setSearchValue] = useState("");
-  const [searchResult, setSearchResult] = useState<User[]>();
+  const [userSelection, setUserSelection] = useState<string[]>([]);
 
-  const userTableData = searchResult?.length !== 0 ? searchResult : users;
-
-  useEffect(() => {
-    const rawResults = fuzzyFilter(users, searchValue, {
-      fields: ["company", "name", "role", "status", "verified"],
-    });
-    setSearchResult(rawResults.map(({ item }) => item));
-  }, [searchValue]);
+  const userTableData = !searchValue
+    ? users
+    : fuzzyFilter(
+        users.map((user) => ({ ...user, verified: user.verified ? "yes" : "no" })),
+        searchValue,
+        {
+          fields: ["company", "name", "role", "status", "verified"],
+        }
+      ).map(({ item }) => ({ ...item, verified: item.verified === "yes" ? true : false }));
 
   return (
     <div className="flex flex-col w-full max-w-screen-2xl">
@@ -41,83 +34,23 @@ export default function UserListPage() {
           </button>
         </NextLink>
       </header>
-      <main>
-        <UserSearch setSearchValue={setSearchValue} />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>
-                <input type="checkbox" className="checkbox border-2" disabled={users?.length === 0}></input>
-              </th>
-              <th>Name</th>
-              <th>Company</th>
-              <th>Role</th>
-              <th>Verified</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody className="[& td]">
-            {userTableData?.map(({ id, company, name, role, image, status, verified }) => (
-              <tr key={id}>
-                <td>
-                  <input type="checkbox" className="checkbox border-2" />
-                </td>
-                <td>
-                  <div className="flex gap-2 items-center font-semibold">
-                    <Avatar image={image} size="sm" circle />
-                    {name}
-                  </div>
-                </td>
-                <td>{company}</td>
-                <td>{UserRoles[role]}</td>
-                <td>{verified ? "Yes" : "No"}</td>
-                <td>
-                  <div
-                    className={`badge ${
-                      status === "active"
-                        ? "badge-success"
-                        : status === "banned"
-                        ? "badge-error"
-                        : "badge-neutral"
-                    } font-bold rounded-md px-3 py-1`}
-                  >
-                    {status}
-                  </div>
-                </td>
-                <td className="w-1">
-                  <div className="dropdown dropdown-end">
-                    <label className="hover:cursor-pointer" tabIndex={0}>
-                      <DotsThreeVertical size={24} />
-                    </label>
-                    <ul
-                      tabIndex={0}
-                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-                    >
-                      <li>
-                        <button>
-                          <PencilSimple />
-                          Edit
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => {
-                            removeOne(id);
-                          }}
-                        >
-                          <TrashSimple />
-                          Remove
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                  <button type="button"></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <main className="flex flex-col gap-8">
+        <div className="flex justify-between p-4">
+          <UserSearchInput onSearch={setSearchValue} />
+          {userSelection.length !== 0 && (
+            <button
+              className="btn btn-error flex gap-4 items-center"
+              onClick={() => {
+                deleteMany(userSelection);
+                setUserSelection([]);
+              }}
+            >
+              <Trash />
+              Delete selected
+            </button>
+          )}
+        </div>
+        <UserTable userData={userTableData} onSelect={setUserSelection} selected={userSelection} />
       </main>
     </div>
   );

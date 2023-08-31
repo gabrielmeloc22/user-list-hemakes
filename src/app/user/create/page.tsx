@@ -1,8 +1,8 @@
 "use client";
 
-import { useUsers } from "@/hooks/useUsers";
-import { UserForm } from "../components/UserForm";
 import { useRouter } from "next/navigation";
+import { useUsers } from "@/app/context/UserContext";
+import { UserForm } from "../components/UserForm";
 
 export default function UserCreatePage() {
   const router = useRouter();
