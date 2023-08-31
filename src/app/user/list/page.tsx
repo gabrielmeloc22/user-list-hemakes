@@ -11,13 +11,16 @@ import { UserTable } from "../components/UserTable";
 export default function UserListPage() {
   const { users } = useUsers();
   const [searchValue, setSearchValue] = useState("");
-  const [userSelection, setUserSelection] = useState<string[]>();
 
   const userTableData = !searchValue
     ? users
-    : fuzzyFilter(users, searchValue, {
-        fields: ["company", "name", "role", "status", "verified"],
-      }).map(({ item }) => item);
+    : fuzzyFilter(
+        users.map((user) => ({ ...user, verified: user.verified ? "yes" : "no" })),
+        searchValue,
+        {
+          fields: ["company", "name", "role", "status", "verified"],
+        }
+      ).map(({ item }) => ({ ...item, verified: item.verified === "yes" ? true : false }));
 
   console.log(userTableData, users);
 
