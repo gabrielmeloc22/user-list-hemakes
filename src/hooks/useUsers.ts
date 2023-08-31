@@ -3,7 +3,7 @@ import { User } from "@/types/user";
 import { useEffect, useState } from "react";
 
 export function useUsers() {
-  const [users, setUsers] = useState<Record<string, User> | null>();
+  const [users, setUsers] = useState<Record<string, User> | undefined>();
 
   useEffect(() => {
     if (!users) {
@@ -17,16 +17,23 @@ export function useUsers() {
     const id = self.crypto.randomUUID();
     setUsers((prev) => ({ ...prev, [id]: { id, ...user } }));
   };
-  const removeOne = (id: string) => {
+  const deleteOne = (id: string) => {
     const filtered = { ...users };
     delete filtered[id];
     setUsers(filtered);
   };
+  const getById = (id: string): User | null | undefined => {
+    if (users === undefined) return users;
+    return users?.[id] ?? null;
+  };
+  const updateUser = (id: string, user: Omit<User, "id">) => {
+    setUsers((prev) => ({ ...prev, [id]: { id, ...user } }));
+  };
 
-  return { users: Object.values(users || {}), save, removeOne };
+  return { users: Object.values(users || {}), save, deleteOne, getById, updateUser };
 }
 
-const getAllUsers = (): Record<string, User> | null => {
+const getAllUsers = (): Record<string, User> => {
   try {
     const users = localStorage.getItem("users");
     if (!users) {
