@@ -1,8 +1,8 @@
 "use client";
 
-import { useUsers } from "@/hooks/useUsers";
 import { notFound, useParams } from "next/navigation";
 import { UserForm } from "../../components/UserForm";
+import { useUsers } from "../../../context/UserContext";
 
 export default function UserEditPage() {
   const { id } = useParams();
