@@ -8,7 +8,7 @@ import { Label } from "@/components/Label";
 
 const createUserValidationSchema = z.object({
   name: z.string().nonempty("Required field"),
-  image: z.string({ required_error: "Required field" }),
+  image: z.string().nonempty("Required field"),
   role: z.enum(["uidesigner", "developer", "hrmanager", "leader"], {
     errorMap: () => ({
       message: "Please select one of the options",
@@ -65,7 +65,7 @@ export function UserForm({ defaultValues, onSubmit }: UserFormProps) {
               id="user-image"
               className="input input-bordered"
               type="text"
-              placeholder={defaultValues?.name || "insert a link to an image"}
+              placeholder={defaultValues?.image || "insert a link to an image"}
               {...register("image")}
             />
           </Label>
