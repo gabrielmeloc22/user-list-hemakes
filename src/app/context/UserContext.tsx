@@ -18,11 +18,10 @@ interface UserContextProps {
   children: React.ReactNode;
 }
 export function UserProvider({ children }: UserContextProps) {
-  const [users, setUsers] = useState<Record<string, User> | undefined>();
-  const usersArray = Object.values(users || {});
+  const [users, setUsers] = useState<User[]>();
 
   useEffect(() => {
-    if (!users) {
+    if (users === undefined) {
       setUsers(getAllUsers());
     } else {
       localStorage.setItem("users", JSON.stringify(users));
@@ -31,46 +30,39 @@ export function UserProvider({ children }: UserContextProps) {
 
   const save = (user: Omit<User, "id">) => {
     const id = self.crypto.randomUUID();
-    setUsers((prev) => ({ ...prev, [id]: { id, ...user } }));
+    setUsers((prev) => [...(prev || []), { id, ...user }]);
   };
   const deleteOne = (id: string) => {
-    if (users) {
-      setUsers((prev) => {
-        const filtered = Object.entries(prev || []).filter(([userId]) => userId !== id);
-        return Object.fromEntries(filtered);
-      });
-    }
+    setUsers((prev) => prev?.filter((user) => user.id !== id));
   };
-  const getById = (id: string): User | null | undefined => {
-    if (users === undefined) return users;
-    return users?.[id];
+  const getById = (id: string): User | undefined => {
+    return users?.find((user) => user.id === id);
   };
   const updateUser = (id: string, user: Omit<User, "id">) => {
-    setUsers((prev) => ({ ...prev, [id]: { id, ...user } }));
+    setUsers((prev) => prev?.map((u) => (u.id === id ? { id, ...user } : u)));
   };
   const deleteMany = (ids: string[]) => {
-    setUsers((prev) => {
-      const filtered = Object.entries(prev || []).filter(([userId]) => !ids.includes(userId));
-      return Object.fromEntries(filtered);
-    });
+    console.log(users?.filter((user) => !ids.includes(user.id)));
+
+    setUsers((prev) => prev?.filter((user) => !ids.includes(user.id)));
   };
 
   return (
-    <UserContext.Provider value={{ users: usersArray, save, deleteOne, updateUser, getById, deleteMany }}>
+    <UserContext.Provider value={{ users: users || [], save, deleteOne, updateUser, getById, deleteMany }}>
       {children}
     </UserContext.Provider>
   );
 }
 
-const getAllUsers = (): Record<string, User> => {
+const getAllUsers = (): User[] => {
   try {
     const users = localStorage.getItem("users");
     if (!users) {
-      return {};
+      return [];
     }
-    return JSON.parse(users);
+    return Object.values(JSON.parse(users));
   } catch (e) {
-    return {};
+    return [];
   }
 };
 
