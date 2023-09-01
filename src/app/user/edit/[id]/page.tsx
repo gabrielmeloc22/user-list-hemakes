@@ -3,9 +3,11 @@
 import { notFound, useParams } from "next/navigation";
 import { UserForm } from "../../components/UserForm";
 import { useUsers } from "../../../context/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function UserEditPage() {
   const { id } = useParams();
+  const router = useRouter();
   const { getById, updateUser } = useUsers();
   const user = getById(id as string);
 
@@ -25,7 +27,13 @@ export default function UserEditPage() {
         </h1>
       </header>
       <main>
-        <UserForm onSubmit={(data) => updateUser(id as string, data)} defaultValues={user} />
+        <UserForm
+          onSubmit={(data) => {
+            updateUser(id as string, data);
+            router.push("/user/list");
+          }}
+          defaultValues={user}
+        />
       </main>
     </div>
   );

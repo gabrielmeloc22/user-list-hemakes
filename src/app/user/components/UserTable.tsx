@@ -33,7 +33,7 @@ export function UserTable({ userData, onSelect, selected, onSort, sorting }: Use
                 type="checkbox"
                 className="checkbox border-2"
                 disabled={userData?.length === 0}
-                checked={selected.length > 0}
+                checked={selected.length === userData?.length}
                 onChange={(e) =>
                   e.target.checked
                     ? userData && e.target.checked && onSelect(userData.map(({ id }) => id))
