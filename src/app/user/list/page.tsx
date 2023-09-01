@@ -35,7 +35,7 @@ export default function UserListPage() {
         </NextLink>
       </header>
       <main className="flex flex-col gap-8">
-        <div className="flex justify-between p-4">
+        <div className="flex flex-wrap justify-between p-4">
           <UserSearchInput onSearch={setSearchValue} />
           {userSelection.length !== 0 && (
             <button
