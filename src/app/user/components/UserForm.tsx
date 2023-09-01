@@ -122,7 +122,7 @@ export function UserForm({ defaultValues, onSubmit }: UserFormProps) {
       </div>
       <div className="flex justify-center gap-10 mt-10">
         <NextLink href="/user/list">
-          <button className="btn btn-error">Cancel</button>
+          <button className="btn btn-info">Cancel</button>
         </NextLink>
         <button type="submit" className="btn btn-primary">
           Submit

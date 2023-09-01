@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 export default function UserEditPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { getById, updateUser } = useUsers();
+  const { getById, updateUser, deleteOne } = useUsers();
   const user = getById(id as string);
 
   if (user === undefined) {
@@ -34,6 +34,18 @@ export default function UserEditPage() {
           }}
           defaultValues={user}
         />
+        <div className="flex border-neutral-300 border-t justify-center w-full p-10  mt-10">
+          <button
+            type="button"
+            className="btn btn-error"
+            onClick={() => {
+              deleteOne(id as string);
+              router.push("/user/list");
+            }}
+          >
+            Delete user
+          </button>
+        </div>
       </main>
     </div>
   );
