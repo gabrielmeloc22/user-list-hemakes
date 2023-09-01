@@ -12,16 +12,29 @@ export default function UserListPage() {
   const { users, deleteMany } = useUsers();
   const [searchValue, setSearchValue] = useState("");
   const [userSelection, setUserSelection] = useState<string[]>([]);
+  const [sorting, setSorting] = useState<"ASC" | "DESC">("ASC");
 
-  const userTableData = !searchValue
-    ? users
-    : fuzzyFilter(
+  const userTableData = getUserTableData();
+
+  function getUserTableData() {
+    let data = users;
+    if (searchValue) {
+      data = fuzzyFilter(
         users.map((user) => ({ ...user, verified: user.verified ? "yes" : "no" })),
         searchValue,
         {
           fields: ["company", "name", "role", "status", "verified"],
         }
       ).map(({ item }) => ({ ...item, verified: item.verified === "yes" ? true : false }));
+    }
+    if (sorting === "ASC") {
+      data.sort((a, b) => (a.name > b.name ? 1 : -1));
+    } else {
+      data.sort((a, b) => (a.name < b.name ? 1 : -1));
+    }
+
+    return data;
+  }
 
   return (
     <div className="flex flex-col w-full max-w-screen-2xl">
@@ -50,7 +63,13 @@ export default function UserListPage() {
             </button>
           )}
         </div>
-        <UserTable userData={userTableData} onSelect={setUserSelection} selected={userSelection} />
+        <UserTable
+          userData={userTableData}
+          onSelect={setUserSelection}
+          selected={userSelection}
+          sorting={sorting}
+          onSort={setSorting}
+        />
       </main>
     </div>
   );

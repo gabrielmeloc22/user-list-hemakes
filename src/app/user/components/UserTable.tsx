@@ -1,7 +1,7 @@
 import { useUsers } from "@/app/context/UserContext";
 import { Avatar } from "@/components/Avatar";
 import { User } from "@/types/user";
-import { DotsThreeVertical, PencilSimple, TrashSimple } from "@phosphor-icons/react";
+import { ArrowDown, ArrowUp, DotsThreeVertical, PencilSimple, TrashSimple } from "@phosphor-icons/react";
 import NextLink from "next/link";
 import { Dispatch, SetStateAction } from "react";
 
@@ -16,9 +16,11 @@ interface UserTableProps {
   userData?: User[];
   onSelect: Dispatch<SetStateAction<string[]>>;
   selected: string[];
+  onSort: Dispatch<SetStateAction<"ASC" | "DESC">>;
+  sorting: "ASC" | "DESC";
 }
 
-export function UserTable({ userData, onSelect, selected }: UserTableProps) {
+export function UserTable({ userData, onSelect, selected, onSort, sorting }: UserTableProps) {
   const { deleteOne } = useUsers();
 
   return (
@@ -38,7 +40,14 @@ export function UserTable({ userData, onSelect, selected }: UserTableProps) {
                 }
               />
             </th>
-            <th>Name</th>
+            <th>
+              <div className="flex items-center gap-2">
+                Name
+                <button onClick={() => onSort((prev) => (prev === "ASC" ? "DESC" : "ASC"))}>
+                  {sorting === "ASC" ? <ArrowUp /> : <ArrowDown />}
+                </button>
+              </div>
+            </th>
             <th>Company</th>
             <th>Role</th>
             <th>Verified</th>
