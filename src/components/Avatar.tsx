@@ -21,7 +21,7 @@ export function Avatar({ image, size = "md", circle = false, alt }: AvatarProps)
 
   return image ? (
     <div className="avatar h-fit w-fit">
-      <div className={`relative items-center bg-slate-200 ${sizeClass}`}>
+      <div className={`relative items-center ${sizeClass}`}>
         <Image className={`${borderClass}`} src={image} alt={alt} fill />
       </div>
     </div>
