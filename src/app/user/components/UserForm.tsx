@@ -118,7 +118,7 @@ export function UserForm({ defaultValues, onSubmit }: UserFormProps) {
             </select>
           </Label>
         </div>
-        <Avatar size="xl" image={watch("image")} />
+        <Avatar size="xl" image={watch("image")} alt="Image preview" />
       </div>
       <div className="flex justify-center gap-10 mt-10">
         <NextLink href="/user/list">

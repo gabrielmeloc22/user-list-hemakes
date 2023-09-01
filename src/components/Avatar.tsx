@@ -1,9 +1,11 @@
 import { User } from "@phosphor-icons/react";
+import Image from "next/image";
 
 interface AvatarProps {
   image?: string;
   size: "sm" | "md" | "lg" | "xl";
   circle?: boolean;
+  alt: string;
 }
 
 const sizes = {
@@ -13,14 +15,14 @@ const sizes = {
   sm: "w-8",
 };
 
-export function Avatar({ image, size = "md", circle = false }: AvatarProps) {
+export function Avatar({ image, size = "md", circle = false, alt }: AvatarProps) {
   const sizeClass = sizes[size];
-  const borderClass = circle ? "rounded-full" : "";
+  const borderClass = circle ? "rounded-full" : "rounded";
 
   return image ? (
     <div className="avatar h-fit w-fit">
-      <div className={`items-center rounded bg-slate-200 ${sizeClass} ${borderClass}`}>
-        <img src={image} />
+      <div className={`relative items-center bg-slate-200 ${sizeClass}`}>
+        <Image className={`${borderClass}`} src={image} alt={alt} fill />
       </div>
     </div>
   ) : (

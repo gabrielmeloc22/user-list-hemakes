@@ -73,7 +73,7 @@ export function UserTable({ userData, onSelect, selected, onSort, sorting }: Use
               </td>
               <td>
                 <div className="flex gap-2 items-center font-semibold">
-                  <Avatar image={image} size="sm" circle />
+                  <Avatar image={image} alt={`${name}'s profile picture`} size="sm" circle />
                   {name}
                 </div>
               </td>
