@@ -13,7 +13,7 @@ enum UserRoles {
 }
 
 interface UserTableProps {
-  userData?: User[];
+  userData: User[];
   onSelect: Dispatch<SetStateAction<string[]>>;
   selected: string[];
   onSort: Dispatch<SetStateAction<"ASC" | "DESC">>;
@@ -32,8 +32,8 @@ export function UserTable({ userData, onSelect, selected, onSort, sorting }: Use
               <input
                 type="checkbox"
                 className="checkbox border-2"
-                disabled={userData?.length === 0}
-                checked={selected.length === userData?.length}
+                disabled={userData.length === 0}
+                checked={selected.length === userData.length && userData.length !== 0}
                 onChange={(e) =>
                   e.target.checked
                     ? userData && e.target.checked && onSelect(userData.map(({ id }) => id))
@@ -57,7 +57,7 @@ export function UserTable({ userData, onSelect, selected, onSort, sorting }: Use
           </tr>
         </thead>
         <tbody>
-          {userData?.map(({ id, company, name, role, image, status, verified }) => (
+          {userData.map(({ id, company, name, role, image, status, verified }) => (
             <tr key={id}>
               <td>
                 <input
@@ -119,6 +119,11 @@ export function UserTable({ userData, onSelect, selected, onSort, sorting }: Use
           ))}
         </tbody>
       </table>
+      {userData.length === 0 && (
+        <div className="flex items-center justify-center mt-16">
+          <h2 className="font-semibold text-lg text-neutral-400">No users to show here!</h2>
+        </div>
+      )}
     </div>
   );
 }
