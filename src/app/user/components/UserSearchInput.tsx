@@ -10,7 +10,7 @@ export function UserSearchInput({ onSearch }: UserSeachInputProps) {
     <label className="flex gap-4 w-fit max-md:w-full border items-center border-neutral-300 rounded-md px-4 py-3 hover:cursor-pointer">
       <MagnifyingGlass size="1rem" />
       <DebounceInput
-        className="outline-none"
+        className="outline-none bg-transparent"
         type="text"
         aria-label="user search"
         id="user-search"
