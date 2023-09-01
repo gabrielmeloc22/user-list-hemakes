@@ -22,7 +22,7 @@ export function UserTable({ userData, onSelect, selected }: UserTableProps) {
   const { deleteOne } = useUsers();
 
   return (
-    <div className="max-sm:overflow-x-scroll overflow-y-hidden min-w-[200px]">
+    <div className="max-sm:overflow-x-scroll h-screen overflow-y-hidden min-w-[200px]">
       <table className="table max-md:table-sm max-[375px]:table-xs">
         <thead>
           <tr>
