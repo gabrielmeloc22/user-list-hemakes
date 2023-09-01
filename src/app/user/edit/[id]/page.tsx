@@ -21,7 +21,7 @@ export default function UserEditPage() {
       <header className="flex flex-col gap-2 mb-20 pt-10">
         <h2>Edit user</h2>
         <h1 className="font-bold text-3xl">
-          <span className="capitalize">{user.name}'s</span> info
+          <span className="capitalize">{user.name}&apos;s</span> info
         </h1>
       </header>
       <main>
